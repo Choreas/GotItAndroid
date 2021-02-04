@@ -1,6 +1,6 @@
-# AppIt9x (appit9x)
+# GotItAndroid
 
-Template for your android app
+Android app for GotIt project.
 
 ## Guide for Windows 
 (unfortunately, I cannot offer guides for unix based systems)

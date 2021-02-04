@@ -1,8 +1,8 @@
 {
-  "name": "appit9x",
+  "name": "proj.it9x.gotitandroid",
   "version": "0.0.1",
-  "description": "Template for your android app",
-  "productName": "AppIt9x",
+  "description": "Android app for GotIt project",
+  "productName": "GotItAndroid",
   "author": "Choreas <niklas.kosanke@web.de>",
   "private": true,
   "scripts": {
