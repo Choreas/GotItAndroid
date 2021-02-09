@@ -1,6 +1,8 @@
 <template>
   <q-page>
-    Index
+    <div class="idle-frame">
+      Waiting for next step...
+    </div>
   </q-page>
 </template>
 
@@ -9,12 +11,20 @@ import ExampleComponent from 'components/CompositionComponent.vue';
 import { defineComponent, ref } from '@vue/composition-api';
 
 export default defineComponent({
-  name: 'PageIndex',
+  name: 'Idle',
   components: { ExampleComponent },
   props: {},
   setup(props, {root}) {
-    void root.$router.replace('/code');
+
     return {};
   }
 });
 </script>
+
+<style>
+.idle-frame {
+  margin-top: 20%;
+  text-align: center;
+  font-size: 30px;
+}
+</style>
