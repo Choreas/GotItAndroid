@@ -124,9 +124,9 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'AppIt9x',
-        short_name: 'AppIt9x',
-        description: 'Template for your android app',
+        name: 'GotItAndroid',
+        short_name: 'GotItA',
+        description: 'GotItAndroid',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
@@ -191,7 +191,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'appit9x'
+        appId: 'gotItAndroid'
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
