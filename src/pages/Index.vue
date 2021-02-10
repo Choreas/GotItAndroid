@@ -13,7 +13,7 @@ export default defineComponent({
   components: { ExampleComponent },
   props: {},
   setup(props, {root}) {
-    void root.$router.replace('/code');
+    void root.$router.replace('code');
     return {};
   }
 });

@@ -8,6 +8,7 @@ const routes: RouteConfig[] = [
       { path: '', component: () => import('pages/Index.vue') },
       { path: 'idle', component: () => import('pages/Idle.vue') },
       { path: 'code', component: () => import('pages/Code.vue') },
+      { path: 'finish', component: () => import('pages/Finish.vue') },
     ]
   },
 
