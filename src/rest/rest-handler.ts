@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as appConfig from '../appConfig.json';
 
 export type sessionState = 'IDLE' | 'QUESTION' | 'RATE' | 'FINISH';
 
@@ -14,6 +15,8 @@ export interface ISessionInfo {
 }
 
 export namespace RestHandler {
+  const baseUrl = appConfig.serverIp;
+
   const sessionInfo: ISessionInfo = {
     state: 'IDLE',
     question: undefined,
