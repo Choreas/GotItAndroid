@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api';
+import { Loading, Notify } from 'quasar';
 import { RestHandler } from 'src/rest/rest-handler';
 
 export default defineComponent({
@@ -19,9 +20,23 @@ export default defineComponent({
   setup(props, {root}) {
     const code = ref('');
 
-    function routeToIdle(): void {
-      RestHandler.poll();
-      void root.$router.replace('idle');
+    async function routeToIdle(): Promise<void> {
+      Loading.show({
+        spinnerColor: 'red',
+        message: 'Logging you in!'
+      });
+      try {
+        if (await RestHandler.startSession(code.value)) {
+          void root.$router.replace('idle');
+        }
+      } catch (e) {
+        console.log(JSON.stringify(e));
+        Notify.create({
+          message: "Could not connect to session. Check the code."
+        })
+      } finally {
+        Loading.hide();
+      }
     }
 
     return {

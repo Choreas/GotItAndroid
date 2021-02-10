@@ -9,22 +9,41 @@ export interface IContent {
 }
 
 export interface ISessionInfo {
-  state: sessionState;
+  status: sessionState;
   question?: IContent;
   answers?: IContent[];
 }
 
 export namespace RestHandler {
   const baseUrl = appConfig.serverIp;
+  let sessionToken: string | undefined = undefined;
 
   const sessionInfo: ISessionInfo = {
-    state: 'IDLE',
+    status: 'IDLE',
     question: undefined,
     answers: undefined
   }
 
-  export async function poll(): Promise<void> {
-    console.log( JSON.stringify((await axios.get('https://gorest.co.in/public-api/users/200')).data) );
+  export async function startSession(code: string): Promise<boolean> {
+    const response = (await axios.get(`http://${baseUrl}/coursesession/enter/${code}`)).data;
+    const token = response.token;
+    if (!token) return false;
+    sessionToken = token;
+    return true;
+  }
+
+  export async function poll(): Promise<boolean> {
+    if (!sessionToken) return false;
+    try {
+      const response = (await axios.get(`http://${baseUrl}/coursesession/status/${sessionToken}`)).data;
+      sessionInfo.status = response.status;
+      sessionInfo.answers = response.answers;
+      sessionInfo.question = response.question;
+      return true;
+    } catch (e) {
+      console.log(JSON.stringify(e));
+      return false;
+    }
   }
 
   export function getSessionState(): Readonly<ISessionInfo> {
