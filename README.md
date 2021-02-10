@@ -13,7 +13,8 @@ Android app for GotIt project.
 5. Install typescript globally: npm install -g typescript
 
 ## Setup and run Project:
-1. Go into project root and issue in terminal: npm install
-2. Change directory to /src-cordova (command: cd src-cordova) and issue in terminal: npm install
+1. Copy /src/appConfigExample.json to /src/appConfig.json and add your local server ip
+2. Go into project root and issue in terminal: npm install
+3. Change directory to /src-cordova (command: cd src-cordova) and issue in terminal: npm install
 
 To run your code in emulator, issue: npm run serve
