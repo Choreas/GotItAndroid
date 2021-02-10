@@ -34,4 +34,4 @@ yarn-error.log*
 .vscode
 
 # App specific
-# /src/appConfig.json
+/src/appConfig.json
