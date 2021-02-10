@@ -9,17 +9,18 @@
 </template>
 
 <script lang="ts">
-import ExampleComponent from 'components/CompositionComponent.vue';
 import { defineComponent, ref } from '@vue/composition-api';
+import { RestHandler } from 'src/rest/rest-handler';
 
 export default defineComponent({
   name: 'Code',
-  components: { ExampleComponent },
+  components: { },
   props: {},
   setup(props, {root}) {
     const code = ref('');
 
     function routeToIdle(): void {
+      RestHandler.poll();
       void root.$router.replace('idle');
     }
 
