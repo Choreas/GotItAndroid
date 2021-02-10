@@ -42,6 +42,7 @@ export default defineComponent({
             break;
           }
           case 'QUESTION': {
+            root.$router.replace('question');
             break;
           }
           case 'FINISH': {
