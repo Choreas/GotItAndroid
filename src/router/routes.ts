@@ -9,6 +9,7 @@ const routes: RouteConfig[] = [
       { path: 'idle', component: () => import('pages/Idle.vue') },
       { path: 'code', component: () => import('pages/Code.vue') },
       { path: 'finish', component: () => import('pages/Finish.vue') },
+      { path: 'question', component: () => import('pages/Question.vue') },
     ]
   },
 

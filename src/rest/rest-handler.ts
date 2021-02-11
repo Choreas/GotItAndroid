@@ -25,11 +25,15 @@ export namespace RestHandler {
   }
 
   export async function startSession(code: string): Promise<boolean> {
-    const response = (await axios.get(`http://${baseUrl}/coursesession/enter/${code}`)).data;
-    const token = response.token;
-    if (!token) return false;
-    sessionToken = token;
-    return true;
+    try {
+      const response = (await axios.get(`http://${baseUrl}/coursesession/enter/${code}`)).data;
+      const token = response.token;
+      if (!token) return false;
+      sessionToken = token;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   export async function poll(): Promise<boolean> {
@@ -48,5 +52,21 @@ export namespace RestHandler {
 
   export function getSessionState(): Readonly<ISessionInfo> {
     return sessionInfo;
+  }
+
+  export async function postAnswer(content: string): Promise<boolean> {
+    if (sessionInfo.status !== 'QUESTION') throw new Error('Tried sending an answer when status was not QUESTION.');
+    try {
+      const response = (await axios.post(`http://${baseUrl}/coursesession/answer`, {
+        token: sessionToken,
+        questionId: sessionInfo.question?.id,
+        answer: content
+      })).data;
+      return true;
+    } catch (e) {
+      console.log(JSON.stringify(e));
+      return false;
+    } finally {
+    }
   }
 }
