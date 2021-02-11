@@ -2,6 +2,7 @@
   <q-page>
     <div class="question-frame">
       In eigenen Worten:
+      {{sessionInfo.question}}
       <q-input class="question-input" type="textarea" v-model="inputContent" />
     </div>
     <q-btn class="send-btn" label="Send" @click="send" />
