@@ -25,11 +25,15 @@ export namespace RestHandler {
   }
 
   export async function startSession(code: string): Promise<boolean> {
-    const response = (await axios.get(`http://${baseUrl}/coursesession/enter/${code}`)).data;
-    const token = response.token;
-    if (!token) return false;
-    sessionToken = token;
-    return true;
+    try {
+      const response = (await axios.get(`http://${baseUrl}/coursesession/enter/${code}`)).data;
+      const token = response.token;
+      if (!token) return false;
+      sessionToken = token;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   export async function poll(): Promise<boolean> {

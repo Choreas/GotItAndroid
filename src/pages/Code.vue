@@ -28,6 +28,10 @@ export default defineComponent({
       try {
         if (await RestHandler.startSession(code.value)) {
           void root.$router.replace('idle');
+        } else {
+          Notify.create({
+            message: "Could not connect to session. Check the code."
+          });
         }
       } catch (e) {
         console.log(JSON.stringify(e));
