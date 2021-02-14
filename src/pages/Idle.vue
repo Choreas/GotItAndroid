@@ -39,6 +39,7 @@ export default defineComponent({
             break;
           }
           case 'RATE': {
+            root.$router.replace('rate');
             break;
           }
           case 'QUESTION': {

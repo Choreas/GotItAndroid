@@ -1,51 +1,70 @@
 <template>
   <q-page>
-    <div class="question-frame">
-      In eigenen Worten:
-      {{sessionInfo.question.content}}
-      <q-input class="question-input" type="textarea" v-model="inputContent" />
+    <div class="title-frame">
+      Bewerten Sie diese Antworten in Bezug auf ihre Verständlichkeit:
     </div>
-    <q-btn class="send-btn" label="Send" @click="send" />
+    <div v-if="!ratingsSent" class="answer-frame">
+      {{sessionInfo.answers[selectedContent].content}}
+    </div>
+    <div v-if="!ratingsSent" class="row vote-frame">
+      <q-btn class="col" label="-1" @click="vote(-1)" />
+      <q-btn class="col" label="+1" @click="vote(1)" />
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from '@vue/composition-api';
+import { defineComponent, onMounted, Ref, ref } from '@vue/composition-api';
 import { Loading, Notify } from 'quasar';
-import { RestHandler } from 'src/rest/rest-handler';
+import { IRating, RestHandler } from 'src/rest/rest-handler';
 
 export default defineComponent({
-  name: 'Question',
+  name: 'Rate',
   components: { },
   props: {},
   setup(props, {root}) {
-    const inputContent = ref('');
+    const selectedContent = ref(0);
+    const ratings: Ref<IRating[]> = ref([]);
     const sessionInfo = RestHandler.getSessionState();
-    const answerSent = ref(false);
+    const ratingsSent = ref(false);
     let timeoutHandle: NodeJS.Timeout;
+
+    function vote(score: -1 | 1): void {
+      const rateObject = sessionInfo.answers![selectedContent.value];
+      ratings.value.push({
+        answerId: rateObject.id,
+        rating: score
+      });
+      if (sessionInfo.answers!.length > selectedContent.value + 1) {
+        selectedContent.value += 1;
+      } else {
+        send();
+      }
+    }
 
     async function send(): Promise<void> {
       if (timeoutHandle) clearTimeout(timeoutHandle);
       Loading.show({
         spinnerColor: 'green',
-        message: 'Sending your input...'
+        message: 'Sending your ratings...'
       });
       try {
-        if (await RestHandler.postAnswer(inputContent.value)) {
+        if (await RestHandler.postRatings(ratings.value)) {
           Notify.create({
             message: 'Success!'
           });
-          answerSent.value = true;
+          ratingsSent.value = true;
         }
       } catch (e) {
         console.log(JSON.stringify(e));
         Notify.create({
-            message: 'Failed. Please try again.'
+            message: 'Failed. Please wait for next step.'
         });
+        ratingsSent.value = true;
       } finally {
         Loading.hide();
       }
-      if(answerSent.value) {
+      if(ratingsSent.value) {
         Loading.show({
           spinnerColor: 'red',
           message: 'Waiting for next step...'
@@ -72,12 +91,11 @@ export default defineComponent({
             break;
           }
           case 'RATE': {
-            if(Loading.isActive) Loading.hide();
-            root.$router.replace('rate');
+            timeoutHandle = setTimeout(pollingCallback, 8000);
             break;
           }
           case 'QUESTION': {
-            timeoutHandle = setTimeout(pollingCallback, 8000);
+            if(Loading.isActive) Loading.hide();
             break;
           }
           case 'FINISH': {
@@ -104,27 +122,38 @@ export default defineComponent({
     } );
 
     return {
-      inputContent,
       send,
-      sessionInfo
+      sessionInfo,
+      selectedContent,
+      vote,
+      ratingsSent
     };
   }
 });
 </script>
 
 <style>
-.question-frame {
+.title-frame {
   margin-top: 20%;
   text-align: center;
   font-size: 30px;
 }
-.question-input {
-  margin-left: 5%;
-  width: 90%;
-  min-height: 40%;
+.answer-frame {
+  margin-top: 50%;
+  width: 60%;
+  margin-left: 20%;
+  font-size: 20px;
 }
-.send-btn {
-  margin-top: 20%;
+.vote-frame {
+  margin-top: 10%;
+}
+.vote-up-btn {
+  margin-top: 10%;
+  margin-left: 40%;
+  width: 20%;
+}
+.vote-down-btn {
+  margin-top: 10%;
   margin-left: 40%;
   width: 20%;
 }
