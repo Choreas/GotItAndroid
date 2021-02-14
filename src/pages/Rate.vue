@@ -63,6 +63,7 @@ export default defineComponent({
         ratingsSent.value = true;
       } finally {
         Loading.hide();
+        timeoutHandle = setTimeout(pollingCallback, 8000);
       }
       if(ratingsSent.value) {
         Loading.show({
@@ -96,6 +97,7 @@ export default defineComponent({
           }
           case 'QUESTION': {
             if(Loading.isActive) Loading.hide();
+            root.$router.replace('question');
             break;
           }
           case 'FINISH': {

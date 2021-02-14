@@ -44,6 +44,7 @@ export default defineComponent({
         });
       } finally {
         Loading.hide();
+        timeoutHandle = setTimeout(pollingCallback, 8000);
       }
       if(answerSent.value) {
         Loading.show({
