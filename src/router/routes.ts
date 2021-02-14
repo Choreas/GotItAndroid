@@ -10,6 +10,7 @@ const routes: RouteConfig[] = [
       { path: 'code', component: () => import('pages/Code.vue') },
       { path: 'finish', component: () => import('pages/Finish.vue') },
       { path: 'question', component: () => import('pages/Question.vue') },
+      { path: 'rate', component: () => import('pages/Rate.vue') },
     ]
   },
 

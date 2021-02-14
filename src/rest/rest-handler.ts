@@ -14,6 +14,11 @@ export interface ISessionInfo {
   answers?: IContent[];
 }
 
+export interface IRating {
+  answerId: string;
+  rating: -1 | 1;
+}
+
 export namespace RestHandler {
   const baseUrl = appConfig.serverIp;
   let sessionToken: string | undefined = undefined;
@@ -61,6 +66,21 @@ export namespace RestHandler {
         token: sessionToken,
         questionId: sessionInfo.question?.id,
         answer: content
+      }})).data;
+      return true;
+    } catch (e) {
+      console.log(JSON.stringify(e));
+      return false;
+    } finally {
+    }
+  }
+
+  export async function postRatings(ratings: IRating[]): Promise<boolean> {
+    if (sessionInfo.status !== 'RATE') throw new Error('Tried sending ratings when status was not RATE.');
+    try {
+      const response = (await axios.post(`http://${baseUrl}/coursesession/rate`, {data:{
+        token: sessionToken,
+        ratings
       }})).data;
       return true;
     } catch (e) {
