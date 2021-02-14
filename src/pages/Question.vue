@@ -2,7 +2,7 @@
   <q-page>
     <div class="question-frame">
       In eigenen Worten:
-      {{sessionInfo.question}}
+      {{sessionInfo.question.content}}
       <q-input class="question-input" type="textarea" v-model="inputContent" />
     </div>
     <q-btn class="send-btn" label="Send" @click="send" />
@@ -21,6 +21,7 @@ export default defineComponent({
   setup(props, {root}) {
     const inputContent = ref('');
     const sessionInfo = RestHandler.getSessionState();
+    const answerSent = ref(false);
     let timeoutHandle: NodeJS.Timeout;
 
     async function send(): Promise<void> {
@@ -34,7 +35,7 @@ export default defineComponent({
           Notify.create({
             message: 'Success!'
           });
-          root.$router.replace('idle');
+          answerSent.value = true;
         }
       } catch (e) {
         console.log(JSON.stringify(e));
@@ -44,11 +45,18 @@ export default defineComponent({
       } finally {
         Loading.hide();
       }
+      if(answerSent.value) {
+        Loading.show({
+          spinnerColor: 'red',
+          message: 'Waiting for next step...'
+        });
+      }
     }
 
     async function pollingCallback(): Promise<void> {
       try {
         if (await RestHandler.poll() === false) {
+          if(Loading.isActive) Loading.hide();
           Notify.create( {
             message: "Fatal error when polling session's state. Please enter the code again."
           } );
@@ -59,10 +67,12 @@ export default defineComponent({
         const newState = RestHandler.getSessionState();
         switch (newState.status) {
           case 'IDLE': {
+            if(Loading.isActive) Loading.hide();
             root.$router.replace('idle');
             break;
           }
           case 'RATE': {
+            if(Loading.isActive) Loading.hide();
             break;
           }
           case 'QUESTION': {
@@ -70,6 +80,7 @@ export default defineComponent({
             break;
           }
           case 'FINISH': {
+            if(Loading.isActive) Loading.hide();
             root.$router.replace('finish');
             break;
           }
@@ -77,6 +88,7 @@ export default defineComponent({
             Notify.create( {
               message: "Unknown session state. This is pretty fatal, please enter the code again."
             } );
+            if(Loading.isActive) Loading.hide();
             root.$router.replace('/');
           }
         }
