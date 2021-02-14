@@ -57,11 +57,11 @@ export namespace RestHandler {
   export async function postAnswer(content: string): Promise<boolean> {
     if (sessionInfo.status !== 'QUESTION') throw new Error('Tried sending an answer when status was not QUESTION.');
     try {
-      const response = (await axios.post(`http://${baseUrl}/coursesession/answer`, {
+      const response = (await axios.post(`http://${baseUrl}/coursesession/answer`, {data:{
         token: sessionToken,
         questionId: sessionInfo.question?.id,
         answer: content
-      })).data;
+      }})).data;
       return true;
     } catch (e) {
       console.log(JSON.stringify(e));
