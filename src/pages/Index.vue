@@ -1,12 +1,11 @@
 <template>
   <q-page>
-    Index
   </q-page>
 </template>
 
 <script lang="ts">
 import ExampleComponent from 'components/CompositionComponent.vue';
-import { defineComponent, ref } from '@vue/composition-api';
+import { defineComponent } from '@vue/composition-api';
 
 export default defineComponent({
   name: 'PageIndex',
