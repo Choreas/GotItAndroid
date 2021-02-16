@@ -3,10 +3,10 @@
     <div class="title-frame">
       Bewerten Sie diese Antworten in Bezug auf ihre Verständlichkeit:
     </div>
-    <div v-if="!ratingsSent" class="answer-frame">
+    <div v-if="!ratingsSent && isMounted" class="answer-frame">
       {{sessionInfo.answers[selectedContent].content}}
     </div>
-    <div v-if="!ratingsSent" class="row vote-frame">
+    <div v-if="!ratingsSent && isMounted" class="row vote-frame">
       <q-btn class="col" label="-1" @click="vote(-1)" />
       <q-btn class="col" label="+1" @click="vote(1)" />
     </div>
@@ -26,6 +26,7 @@ export default defineComponent({
     const selectedContent = ref(0);
     const ratings: Ref<IRating[]> = ref([]);
     const sessionInfo = RestHandler.getSessionState();
+    const isMounted = ref(false);
     const ratingsSent = ref(false);
     let timeoutHandle: NodeJS.Timeout;
 
@@ -120,7 +121,15 @@ export default defineComponent({
     }
 
     onMounted( async () => {
+      if (sessionInfo.answers!.length === 0) {
+        ratingsSent.value = true;
+        Loading.show({
+          spinnerColor: 'red',
+          message: 'Nothing to rate. Waiting for next step...'
+        });
+      }
       timeoutHandle = setTimeout(pollingCallback, 8000);
+      isMounted.value = true;
     } );
 
     return {
@@ -128,7 +137,8 @@ export default defineComponent({
       sessionInfo,
       selectedContent,
       vote,
-      ratingsSent
+      ratingsSent,
+      isMounted
     };
   }
 });
