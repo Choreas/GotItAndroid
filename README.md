@@ -2,6 +2,9 @@
 
 Android app for GotIt project.
 
+The server is Free and Open Source, too:
+https://github.com/MidnightThings/GotIt
+
 ## Guide for Windows 
 (unfortunately, I cannot offer guides for unix based systems)
 
